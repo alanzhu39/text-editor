@@ -56,12 +56,54 @@ int EditorView::getCharWidth() {
     return this->charWidth;
 }
 
-void EditorView::draw(sf::RenderWindow &window) {
+void EditorView::draw(sf::RenderWindow &window, bool isVertical) {
+    // Draw in vertical mode
+    if (isVertical) {
+        this->drawVertical(window);
+        return;
+    }
+
+    // Draw in normal (horizontal) mode
     // TODO: El content devuelve un vector diciendo que alto tiene cada linea,
     //      por ahora asumo que todas miden "1" de alto
     this->drawLines(window);
 
     // Dibujo los numeros de la izquierda
+
+    // TODO: Hacer una clase separada para el margin
+    for (int lineNumber = 1; lineNumber <= this->content.linesCount(); lineNumber++) {
+        int lineHeight = 1;
+
+        int blockHeight = lineHeight * this->fontSize;
+
+        sf::Text lineNumberText;
+        lineNumberText.setFillColor(sf::Color::White);
+        lineNumberText.setFont(this->font);
+        lineNumberText.setString(std::to_string(lineNumber));
+        lineNumberText.setCharacterSize(this->fontSize - 1);
+        lineNumberText.setPosition(-this->marginXOffset, blockHeight * (lineNumber - 1));
+
+        sf::RectangleShape marginRect(sf::Vector2f(this->marginXOffset - 5, blockHeight));
+        marginRect.setFillColor(this->colorMargin);
+        marginRect.setPosition(-this->marginXOffset, blockHeight * (lineNumber - 1));
+
+        window.draw(marginRect);
+        window.draw(lineNumberText);
+    }
+
+    this->drawCursor(window);
+}
+
+void EditorView::drawVertical(sf::RenderWindow &window) {
+    // TODO: El content devuelve un vector diciendo que alto tiene cada linea,
+    //      por ahora asumo que todas miden "1" de alto
+    // TODO: The content returns a vector saying what height each line has,
+    //      for now I assume that everything measures "1" in height (has height 1).
+    //      Por ejemplo, una línea puede tener alto mayor que "1" si pasa el tamaño de la ventana
+    this->drawLinesVertical(window);
+
+    // Dibujo los numeros de la izquierda
+    // Draw the numbers on the left
 
     // TODO: Hacer una clase separada para el margin
     for (int lineNumber = 1; lineNumber <= this->content.linesCount(); lineNumber++) {
@@ -153,6 +195,47 @@ void EditorView::drawLines(sf::RenderWindow &window) {
     }
 }
 
+void EditorView::drawLinesVertical(sf::RenderWindow &window) {
+    this->rightLimitPx = this->content.linesCount() * this->fontSize;
+
+    for (int lineNumber = 0; lineNumber < this->content.linesCount(); lineNumber++) {
+        sf::String line = this->content.getLine(lineNumber);
+
+        // TODO: Esto es al pe?
+        this->bottomLimitPx = std::max((int)this->bottomLimitPx, (int)(this->fontSize * line.getSize()));
+
+        float offsety = 0;
+
+        for (int charIndexInLine = 0; charIndexInLine < (int)line.getSize(); charIndexInLine++) {
+            sf::String currentLineText = line[charIndexInLine];
+
+            // En general hay una unica seleccion, en el futuro podria haber mas de una
+            // In general there is a unique selection, in the future there could be more than one
+            bool currentSelected = content.isSelected(lineNumber, charIndexInLine);
+
+            sf::Text texto;
+            texto.setFillColor(this->colorChar);
+            texto.setFont(font);
+            texto.setString(currentLineText);
+            texto.setCharacterSize(this->fontSize);
+            texto.setPosition(lineNumber * this->fontSize, offsety);
+
+            window.draw(texto);
+
+            if (currentSelected) {
+                sf::RectangleShape selectionRect(
+                    sf::Vector2f(this->charWidth, this->fontSize));
+                selectionRect.setFillColor(this->colorSelection);
+                // TODO: Que el +2 no sea un numero magico
+                // TODO: Make the +2 not a magic number
+                selectionRect.setPosition(2 + lineNumber * this->fontSize, offsety);
+                window.draw(selectionRect);
+            }
+
+            offsety += this->fontSize;
+        }
+    }
+}
 
 // TODO: No harcodear constantes aca. CursorView?
 void EditorView::drawCursor(sf::RenderWindow &window) {

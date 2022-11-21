@@ -11,7 +11,8 @@ class EditorView {
         const sf::String &workingDirectory,
         EditorContent &editorContent);
 
-    void draw(sf::RenderWindow &window);
+    void draw(sf::RenderWindow &window, bool isVertical=false);
+    void drawVertical(sf::RenderWindow &window);
     void setFontSize(int fontSize);
 
     void scrollUp(sf::RenderWindow &window);
@@ -46,7 +47,9 @@ class EditorView {
     EditorContent &content;
 
     void drawLines(sf::RenderWindow &window);
+    void drawLinesVertical(sf::RenderWindow &window);
     void drawCursor(sf::RenderWindow &window);
+    void drawCursorVertical(sf::RenderWindow &window);
 
     sf::Font font;
     int fontSize;

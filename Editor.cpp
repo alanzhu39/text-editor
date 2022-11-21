@@ -6,6 +6,7 @@
 
 int main(int argc, char* argv[]) {
 
+    bool isVertical = true;
     std::string workingDirectory = ImplementationUtils::getWorkingDirectory(argv[0]);
 
     std::string saveFileName;
@@ -55,7 +56,7 @@ int main(int argc, char* argv[]) {
 
         window.clear(backgroundColor);
         window.setView(editorView.getCameraView());
-        editorView.draw(window);
+        editorView.draw(window, isVertical);
         window.display();
     }
 
