@@ -29,6 +29,12 @@ EditorView::EditorView(
 
     this->colorChar = sf::Color::White;
     this->colorSelection = sf::Color(106, 154, 232);
+    
+    if (this->verticalMode) {
+        this->colorMargin = sf::Color(0, 59, 0);
+        this->colorChar = sf::Color(0, 255, 65);
+        this->colorSelection = sf::Color(0, 143, 17);
+    }
 }
 
 // TODO: Divide fontsize from lineheight
@@ -83,7 +89,7 @@ void EditorView::draw(sf::RenderWindow &window) {
         int blockHeight = lineHeight * this->fontSize;
 
         sf::Text lineNumberText;
-        lineNumberText.setFillColor(sf::Color::White);
+        lineNumberText.setFillColor(this->colorChar);
         lineNumberText.setFont(this->font);
         lineNumberText.setString(std::to_string(lineNumber));
         lineNumberText.setCharacterSize(this->fontSize - 1);
@@ -120,7 +126,7 @@ void EditorView::drawVertical(sf::RenderWindow &window) {
         int blockHeight = lineHeight * this->fontSize;
 
         sf::Text lineNumberText;
-        lineNumberText.setFillColor(sf::Color::White);
+        lineNumberText.setFillColor(this->colorChar);
         lineNumberText.setFont(this->font);
         lineNumberText.setString(std::to_string(lineNumber));
         lineNumberText.setCharacterSize(this->fontSize - 1);
@@ -260,7 +266,7 @@ void EditorView::drawCursor(sf::RenderWindow &window) {
     int column = cursorPos.second;
 
     sf::RectangleShape cursorRect(sf::Vector2f(cursorDrawWidth, lineHeight));
-    cursorRect.setFillColor(sf::Color::White);
+    cursorRect.setFillColor(this->colorChar);
 
     cursorRect.setPosition(
         this->marginXOffset + column * charWidth,
@@ -281,7 +287,7 @@ void EditorView::drawCursorVertical(sf::RenderWindow &window) {
     int column = cursorPos.second;
 
     sf::RectangleShape cursorRect(sf::Vector2f(lineHeight, cursorDrawWidth));
-    cursorRect.setFillColor(sf::Color::White);
+    cursorRect.setFillColor(this->colorChar);
 
     cursorRect.setPosition(
         width - (lineN + 1) * lineHeight,
@@ -333,7 +339,7 @@ std::pair<int, int> EditorView::getDocumentCoordsVertical(
 
     mouseY -= this->marginXOffset;
 
-    int lineN = (this->rightLimitPx - mouseX) / this->getLineHeight();
+    int lineN = (std::max(this->rightLimitPx, this->getWidth()) - mouseX) / this->getLineHeight();
     int charN = 0;
 
     // Restrinjo numero de linea a la altura del documento

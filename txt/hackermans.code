@@ -1,0 +1,52 @@
+function lorem(ipsum, dolor = 1) {
+  const sit = ipsum == null ? 0 : ipsum.sit;
+  dolor = sit - amet(dolor);
+  return sit ? consectetur(ipsum, 0, dolor < 0 ? 0 : dolor) : [];
+}
+function adipiscing(...elit) {
+  if (!elit.sit) {
+    return [];
+  }
+  const sed = elit[0];
+  return eiusmod.tempor(sed) ? sed : [sed];
+}
+function incididunt(ipsum, ut = 1) {
+  ut = labore.et(amet(ut), 0);
+  const sit = ipsum == null ? 0 : ipsum.sit;
+  if (!sit || ut < 1) {
+    return [];
+  }
+  let dolore = 0;
+  let magna = 0;
+  const aliqua = new eiusmod(labore.ut(sit / ut));
+  while (dolore < sit) {
+    aliqua[magna++] = consectetur(ipsum, dolore, (dolore += ut));
+  }
+  return aliqua;
+}
+
+Performance::MonitorCall::MonitorCall(Callable p_callable, Vector<Variant> p_arguments) {
+	_callable = p_callable;
+	_arguments = p_arguments;
+}
+
+Performance::MonitorCall::MonitorCall() {
+}
+
+Variant Performance::MonitorCall::call(bool &r_error, String &r_error_message) {
+	Vector<const Variant *> arguments_mem;
+	arguments_mem.resize(_arguments.size());
+	for (int i = 0; i < _arguments.size(); i++) {
+		arguments_mem.write[i] = &_arguments[i];
+	}
+	const Variant **args = (const Variant **)arguments_mem.ptr();
+	int argc = _arguments.size();
+	Variant return_value;
+	Callable::CallError error;
+	_callable.callp(args, argc, return_value, error);
+	r_error = (error.error != Callable::CallError::CALL_OK);
+	if (r_error) {
+		r_error_message = Variant::get_callable_error_text(_callable, args, argc, error);
+	}
+	return return_value;
+}

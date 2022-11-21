@@ -30,6 +30,9 @@ int main(int argc, char* argv[]) {
     sf::RenderWindow window(sf::VideoMode(width, height), "text-editor");
     window.setVerticalSyncEnabled(true);
     sf::Color backgroundColor = sf::Color(21, 29, 45);
+    if (verticalMode) {
+        backgroundColor = sf::Color(13, 2, 8);
+    }
 
     TextDocument document;
     document.init(loadFileName);
