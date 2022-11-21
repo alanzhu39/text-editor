@@ -1,0 +1,36 @@
+InputController object:
+- private EditorContent reference member, updated via various user events (keyboard, mouse)
+- constant input handler handles inputs that could always be present (scrolling, mouse position when highlighting selection)
+- event handler handles inputs from interrupting events (keys pressed, mouse click, etc.)
+
+EditorView object:
+- constructed from EditorContent reference, sf::RenderWindow, and working directory name
+- draws UI elements (line numbers, line content) to sf render window using content from editor
+- also includes methods to manipulate view window (window resizing, scrolling, rotate, etc.)
+- view is updated as editor content is updated (by input controller)
+
+EditorContent object:
+- includes Cursor object, TextDocument object, Font option, SelectionData object
+- methods manipulate the various objects in unison, eg:
+  - moving cursor (must be in line with contents of underlying text document)
+  - managing selections (might utilize cursor position)
+  - editing text (use cursor position to track position in text document)
+
+Cursor object:
+- tracks its own position (lineN, charN), and max charN reached
+- includes methods to update position
+
+TextDocument object:
+- includes private buffer, line buffer (buffer holds string contents of file, line buffer holds line start positions)
+- methods update "contents" of text document (via buffer), saveFile writes from buffers to ofstream
+
+SelectionData object:
+- Has some internal data structures
+  - Extremo (endpoints), track selection endpoint positions
+  - Selection, consists of endpoints and helps track which selections are active
+- private list of selections, can be added to (create new selection) or updated (update active selection)
+
+Moving cursor in editor content:
+- when going up/down, max charN reached by cursor is tracked.
+- if cursor pointer is within chars in the next line, then should move to max charN reached if possible
+- otherwise, move to end of next line

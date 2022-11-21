@@ -16,10 +16,10 @@ int main(int argc, char* argv[]) {
         loadFileName = workingDirectory + argv[1];
     } else {
         saveFileName = workingDirectory + "txt/textoDePruebaGuardado.txt";
-        loadFileName = workingDirectory + "txt/textoDePruebaGuardado.txt";
+        loadFileName = workingDirectory + "txt/textoDePrueba.txt";
     }
 
-    sf::RenderWindow window(sf::VideoMode(720, 405), "Jonno-text");
+    sf::RenderWindow window(sf::VideoMode(720, 405), "text-editor");
     window.setVerticalSyncEnabled(true);
     sf::Color backgroundColor = sf::Color(21, 29, 45);
 
