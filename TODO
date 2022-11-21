@@ -1,9 +1,9 @@
 TODO:
 Features:
-- hold shift to edit selections
 - undo-redo
 
 Bugfixes:
+- hold shift to edit selections
 - shift with mouse click doesn't always work
 - some special characters don't work
 - rotate some characters for redability (underscore, colons, semicolons, parantheses)
