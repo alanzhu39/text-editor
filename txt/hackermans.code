@@ -1,28 +1,29 @@
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null ? 0 : ipsum.sit;
-  dolor = sit - amet(dolor);
-  return sit ? consectetur(ipsum, 0, dolor < 0 ? 0 : dolor) : [];
+AbstractCommand::~AbstractCommand()
+{
+  disableReadCheckSocket();
+  disableWriteCheckSocket();
+#ifdef ENABLE_ASYNC_DNS
+  asyncNameResolverMan_->disableNameResolverCheck(e_, this);
+#endif // ENABLE_ASYNC_DNS
+  requestGroup_->decreaseNumCommand();
+  requestGroup_->decreaseStreamCommand();
+  if (incNumConnection_) {
+    requestGroup_->decreaseStreamConnection();
+  }
 }
-function adipiscing(...elit) {
-  if (!elit.sit) {
-    return [];
-  }
-  const sed = elit[0];
-  return eiusmod.tempor(sed) ? sed : [sed];
-}
-function incididunt(ipsum, ut = 1) {
-  ut = labore.et(amet(ut), 0);
-  const sit = ipsum == null ? 0 : ipsum.sit;
-  if (!sit || ut < 1) {
-    return [];
-  }
-  let dolore = 0;
-  let magna = 0;
-  const aliqua = new eiusmod(labore.ut(sit / ut));
-  while (dolore < sit) {
-    aliqua[magna++] = consectetur(ipsum, dolore, (dolore += ut));
-  }
-  return aliqua;
+
+void AbstractCommand::useFasterRequest(
+    const std::shared_ptr<Request>& fasterRequest)
+{
+  A2_LOG_INFO(fmt("CUID#%" PRId64 " - Use faster Request hostname=%s, port=%u",
+                  getCuid(), fasterRequest->getHost().c_str(),
+                  fasterRequest->getPort()));
+  // Cancel current Request object and use faster one.
+  fileEntry_->removeRequest(req_);
+  e_->setNoWait(true);
+  e_->addCommand(
+      InitiateConnectionCommandFactory::createInitiateConnectionCommand(
+          getCuid(), fasterRequest, fileEntry_, requestGroup_, e_));
 }
 
 Performance::MonitorCall::MonitorCall(Callable p_callable, Vector<Variant> p_arguments) {

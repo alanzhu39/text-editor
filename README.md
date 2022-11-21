@@ -23,6 +23,17 @@ A working Makefile is included, works great assuming you have sfml installed cor
 make && ./editor
 ```
 
+## Matrix Mode
+
+Editor mode that displays lines vertically, from right to left.
+
+![Matrix Mode Screenshot](img/matrix_mode_screenshot.png)
+
+Maintains all existing functionality, and mouse and arrow key cursor control work intuitively. Activate by adding the `--matrix-mode` argument in the command line:
+```
+./editor <filename> --matrix-mode
+```
+
 ## Warning!
 
 Be careful with the data you save!

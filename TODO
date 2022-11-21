@@ -6,6 +6,7 @@ Features:
 Bugfixes:
 - shift with mouse click doesn't always work
 - some special characters don't work
+- rotate some characters for redability (underscore, colons, semicolons, parantheses)
 
 11/20/22:
 In progress:
