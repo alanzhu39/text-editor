@@ -13,11 +13,15 @@ EditorView::EditorView(
     // this->font.loadFromFile("fonts/FreeMono.ttf");
     this->font.loadFromFile(workingDirectory + "fonts/DejaVuSansMono.ttf");
 
-
-    this->bottomLimitPx = 1;
-    this->rightLimitPx = 1;
-
     this->setFontSize(18);  // Important to call
+
+    if (this->verticalMode) {
+        this->bottomLimitPx = 1;
+        this->rightLimitPx = this->content.linesCount() * this->fontSize;
+    } else {
+        this->bottomLimitPx = this->content.linesCount() * this->fontSize;
+        this->rightLimitPx = 1;
+    }
 
     // TODO: Cambiarlo en relacion a la fontsize
     this->marginXOffset = 45;
@@ -106,7 +110,7 @@ void EditorView::drawVertical(sf::RenderWindow &window) {
 
     // Dibujo los numeros de la izquierda
     // Draw the numbers on the left
-    float width = this->getWidth();
+    float width = std::max(this->rightLimitPx, this->getWidth());
 
     // TODO: Hacer una clase separada para el margin
     // TODO: Make a separate class for the margin
@@ -201,8 +205,8 @@ void EditorView::drawLines(sf::RenderWindow &window) {
 }
 
 void EditorView::drawLinesVertical(sf::RenderWindow &window) {
-    this->rightLimitPx = (this->content.linesCount() - 1) * this->fontSize;
-    float width = this->getWidth();
+    this->rightLimitPx = this->content.linesCount() * this->fontSize;
+    float width = std::max(this->rightLimitPx, this->getWidth());
 
     for (int lineNumber = 0; lineNumber < this->content.linesCount(); lineNumber++) {
         sf::String line = this->content.getLine(lineNumber);
@@ -266,7 +270,7 @@ void EditorView::drawCursor(sf::RenderWindow &window) {
 }
 
 void EditorView::drawCursorVertical(sf::RenderWindow &window) {
-    float width = this->getWidth();
+    float width = std::max(this->rightLimitPx, this->getWidth());
     int offsetY = this->marginXOffset;
     int cursorDrawWidth = 2;
 
@@ -329,7 +333,7 @@ std::pair<int, int> EditorView::getDocumentCoordsVertical(
 
     mouseY -= this->marginXOffset;
 
-    int lineN = (this->getWidth() - mouseX) / this->getLineHeight();
+    int lineN = (this->rightLimitPx - mouseX) / this->getLineHeight();
     int charN = 0;
 
     // Restrinjo numero de linea a la altura del documento
@@ -369,29 +373,39 @@ void EditorView::scrollUp(sf::RenderWindow &window) {
 
 void EditorView::scrollDown(sf::RenderWindow &window) {
     float height = this->getHeight();
-    float bottomLimit = std::max(this->getBottomLimitPx(), height);
+    float bottomLimit = std::max(this->getBottomLimitPx() + 20, height);
+    if (this->verticalMode) {
+        bottomLimit = std::max(this->bottomLimitPx + this->marginXOffset + 20, height);
+    }
     auto camPos = this->camera.getCenter();
     // Numero magico 20 como un plus
-    if (camPos.y + height / 2 < bottomLimit + 20) {
+    if (camPos.y + height / 2 < bottomLimit) {
         this->camera.move(0, this->deltaScroll);
     }
 }
 
 void EditorView::scrollLeft(sf::RenderWindow &window) {
     float width = this->getWidth();
+    float leftLimit = 0;
+    if (this->verticalMode) {
+        leftLimit = std::max(float(-20), width - this->rightLimitPx);
+    }
     auto camPos = this->camera.getCenter();
     // Scrolleo arriba si no me paso del limite izquierdo
-    if (camPos.x - width / 2 > 0) {
+    if (camPos.x - width / 2 > leftLimit) {
         this->camera.move(-this->deltaScroll, 0);
     }
 }
 
 void EditorView::scrollRight(sf::RenderWindow &window) {
     float width = this->getWidth();
-    float rightLimit = std::max(this->getRightLimitPx(), width);
+    float rightLimit = std::max(this->rightLimitPx + this->marginXOffset, width);
+    if (this->verticalMode) {
+        rightLimit = std::max(this->rightLimitPx, width);
+    }
     auto camPos = this->camera.getCenter();
     // Numero magico 20 como un plus
-    if (camPos.x + width / 2 < rightLimit + 20) {
+    if (camPos.x + width / 2 < rightLimit) {
         this->camera.move(this->deltaScroll, 0);
     }
 }
@@ -413,7 +427,12 @@ void EditorView::zoomOut() {
 }
 
 void EditorView::setCameraBounds(int width, int height) {
-    this->camera = sf::View(sf::FloatRect(0, 0, width, height));
+    if (this->verticalMode) {
+        this->camera = sf::View(
+            sf::FloatRect(std::max(this->rightLimitPx, float(width)) - width, 0, width, height));
+    } else {
+        this->camera = sf::View(sf::FloatRect(0, 0, width, height));
+    }
 }
 
 float EditorView::getWidth() {

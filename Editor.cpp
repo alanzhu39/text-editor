@@ -27,11 +27,6 @@ int main(int argc, char* argv[]) {
 
     int width = 720;
     int height = 405;
-    if (verticalMode) {
-        int temp = height;
-        height = width;
-        width = temp;
-    }
     sf::RenderWindow window(sf::VideoMode(width, height), "text-editor");
     window.setVerticalSyncEnabled(true);
     sf::Color backgroundColor = sf::Color(21, 29, 45);
