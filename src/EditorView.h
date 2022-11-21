@@ -69,6 +69,8 @@ class EditorView {
     sf::Color colorSelection;
 
     sf::View camera;
+    float getWidth();
+    float getHeight();
     float deltaScroll;
     float deltaRotation;
     float deltaZoomIn, deltaZoomOut;

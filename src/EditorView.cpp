@@ -13,6 +13,7 @@ EditorView::EditorView(
     // this->font.loadFromFile("fonts/FreeMono.ttf");
     this->font.loadFromFile(workingDirectory + "fonts/DejaVuSansMono.ttf");
 
+
     this->bottomLimitPx = 1;
     this->rightLimitPx = 1;
 
@@ -105,7 +106,7 @@ void EditorView::drawVertical(sf::RenderWindow &window) {
 
     // Dibujo los numeros de la izquierda
     // Draw the numbers on the left
-    float width = window.getView().getSize().x;
+    float width = this->getWidth();
 
     // TODO: Hacer una clase separada para el margin
     // TODO: Make a separate class for the margin
@@ -201,7 +202,7 @@ void EditorView::drawLines(sf::RenderWindow &window) {
 
 void EditorView::drawLinesVertical(sf::RenderWindow &window) {
     this->rightLimitPx = (this->content.linesCount() - 1) * this->fontSize;
-    float width = window.getView().getSize().x;
+    float width = this->getWidth();
 
     for (int lineNumber = 0; lineNumber < this->content.linesCount(); lineNumber++) {
         sf::String line = this->content.getLine(lineNumber);
@@ -265,7 +266,7 @@ void EditorView::drawCursor(sf::RenderWindow &window) {
 }
 
 void EditorView::drawCursorVertical(sf::RenderWindow &window) {
-    float width = window.getView().getSize().x;
+    float width = this->getWidth();
     int offsetY = this->marginXOffset;
     int cursorDrawWidth = 2;
 
@@ -319,7 +320,7 @@ std::pair<int, int> EditorView::getDocumentCoords(
 }
 
 void EditorView::scrollUp(sf::RenderWindow &window) {
-    float height = window.getView().getSize().y;
+    float height = this->getHeight();
     auto camPos = this->camera.getCenter();
     // Scrolleo arriba solo si no me paso del limite superior
     if (camPos.y - height / 2 > 0) {
@@ -328,7 +329,7 @@ void EditorView::scrollUp(sf::RenderWindow &window) {
 }
 
 void EditorView::scrollDown(sf::RenderWindow &window) {
-    float height = window.getView().getSize().y;
+    float height = this->getHeight();
     float bottomLimit = std::max(this->getBottomLimitPx(), height);
     auto camPos = this->camera.getCenter();
     // Numero magico 20 como un plus
@@ -338,7 +339,7 @@ void EditorView::scrollDown(sf::RenderWindow &window) {
 }
 
 void EditorView::scrollLeft(sf::RenderWindow &window) {
-    float width = window.getView().getSize().x;
+    float width = this->getWidth();
     auto camPos = this->camera.getCenter();
     // Scrolleo arriba si no me paso del limite izquierdo
     if (camPos.x - width / 2 > 0) {
@@ -347,7 +348,7 @@ void EditorView::scrollLeft(sf::RenderWindow &window) {
 }
 
 void EditorView::scrollRight(sf::RenderWindow &window) {
-    float width = window.getView().getSize().x;
+    float width = this->getWidth();
     float rightLimit = std::max(this->getRightLimitPx(), width);
     auto camPos = this->camera.getCenter();
     // Numero magico 20 como un plus
@@ -374,6 +375,14 @@ void EditorView::zoomOut() {
 
 void EditorView::setCameraBounds(int width, int height) {
     this->camera = sf::View(sf::FloatRect(0, 0, width, height));
+}
+
+float EditorView::getWidth() {
+    this->camera.getSize().x;
+}
+
+float EditorView::getHeight() {
+    this->camera.getSize().y;
 }
 
 sf::View EditorView::getCameraView() {
