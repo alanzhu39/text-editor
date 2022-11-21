@@ -1,4 +1,21 @@
 # text-editor
+
+Forked from [JonSeijo/text-editor](https://github.com/JonSeijo/text-editor).
+
+## Matrix Mode
+
+A fun feature developed by [me](https://github.com/alanzhu39). Editor mode that displays text with a classic Matrix-esque code appearance. Lines are written vertically from top to bottom, left to right.
+
+![Matrix Mode Screenshot](img/matrix_mode_screenshot.png)
+
+Maintains all existing functionality, and mouse and arrow key cursor control are updated to work intuitively. Activate by adding the `--matrix-mode` argument in the command line:
+
+```
+./editor <filename> --matrix-mode
+```
+
+## About
+
 Text editor made in C++ using SFML
 
 This is a simple text editor made from scratch in C++. (Using SFML for window drawing)
@@ -21,17 +38,6 @@ A working Makefile is included, works great assuming you have sfml installed cor
 
 ```
 make && ./editor
-```
-
-## Matrix Mode
-
-Editor mode that displays lines vertically, from right to left.
-
-![Matrix Mode Screenshot](img/matrix_mode_screenshot.png)
-
-Maintains all existing functionality, and mouse and arrow key cursor control work intuitively. Activate by adding the `--matrix-mode` argument in the command line:
-```
-./editor <filename> --matrix-mode
 ```
 
 ## Warning!
