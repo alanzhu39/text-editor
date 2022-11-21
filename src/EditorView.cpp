@@ -290,6 +290,10 @@ void EditorView::drawCursorVertical(sf::RenderWindow &window) {
 // Asume que el x=0 es donde empieza el texto
 std::pair<int, int> EditorView::getDocumentCoords(
     float mouseX, float mouseY) {
+    
+    if (this->verticalMode) {
+        return this->getDocumentCoordsVertical(mouseX, mouseY);
+    }
 
     int lineN = mouseY / this->getLineHeight();
     int charN = 0;
@@ -309,6 +313,40 @@ std::pair<int, int> EditorView::getDocumentCoords(
 
         // column != charN because tabs
         int column = std::round(mouseX / this->getCharWidth());
+        charN = this->content.getCharIndexOfColumn(lineN, column);
+
+        // Restrinjo numero de caracter a cant de caracteres de la linea
+        charN = std::max(charN, 0);
+        charN = std::min(charN, this->content.colsInLine(lineN));
+    }
+
+    return std::pair<int, int>(lineN, charN);
+}
+
+std::pair<int, int> EditorView::getDocumentCoordsVertical(
+    float mouseX, float mouseY) {
+
+    mouseY = mouseY - this->marginXOffset;
+
+    int lineN = (this->getWidth() - mouseX) / this->getLineHeight();
+    int charN = 0;
+
+    // Restrinjo numero de linea a la altura del documento
+    // Restrict line number to the height of the document
+    int lastLine = this->content.linesCount() - 1;
+
+    if (lineN < 0) {
+        lineN = 0;
+        charN = 0;
+    } else if (lineN > lastLine) {
+        lineN = lastLine;
+        charN = this->content.colsInLine(lineN);
+    } else {
+        lineN = std::max(lineN, 0);
+        lineN = std::min(lineN, lastLine);
+
+        // column != charN because tabs
+        int column = std::round(mouseY / this->getLineHeight());
         charN = this->content.getCharIndexOfColumn(lineN, column);
 
         // Restrinjo numero de caracter a cant de caracteres de la linea
@@ -378,11 +416,11 @@ void EditorView::setCameraBounds(int width, int height) {
 }
 
 float EditorView::getWidth() {
-    this->camera.getSize().x;
+    return this->camera.getSize().x;
 }
 
 float EditorView::getHeight() {
-    this->camera.getSize().y;
+    return this->camera.getSize().y;
 }
 
 sf::View EditorView::getCameraView() {

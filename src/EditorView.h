@@ -74,6 +74,8 @@ class EditorView {
     float deltaScroll;
     float deltaRotation;
     float deltaZoomIn, deltaZoomOut;
+
+    std::pair<int,int> getDocumentCoordsVertical(float mouseX, float mouseY);
 };
 
 #endif
