@@ -1,6 +1,15 @@
 TODO:
+
 11/20/22:
 In progress:
+- draw cursor
+- cleaning up, make sure horizontal mode still works
+- activate via command line arg
+
+Finished:
 Vertical mode
 - mostly just have to update editor view?
   - can we have it as a toggle. yes I think so, just refactor drawing functions and choose based on mode flag
+- draw lines
+- draw margin
+- updated tab and esc keyboard input behavior

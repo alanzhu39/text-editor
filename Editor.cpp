@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
 
-    bool isVertical = true;
+    bool verticalMode = true;
     std::string workingDirectory = ImplementationUtils::getWorkingDirectory(argv[0]);
 
     std::string saveFileName;
@@ -20,7 +20,14 @@ int main(int argc, char* argv[]) {
         loadFileName = workingDirectory + "txt/textoDePrueba.txt";
     }
 
-    sf::RenderWindow window(sf::VideoMode(720, 405), "text-editor");
+    int width = 720;
+    int height = 405;
+    if (verticalMode) {
+        int temp = height;
+        height = width;
+        width = temp;
+    }
+    sf::RenderWindow window(sf::VideoMode(width, height), "text-editor");
     window.setVerticalSyncEnabled(true);
     sf::Color backgroundColor = sf::Color(21, 29, 45);
 
@@ -56,7 +63,7 @@ int main(int argc, char* argv[]) {
 
         window.clear(backgroundColor);
         window.setView(editorView.getCameraView());
-        editorView.draw(window, isVertical);
+        editorView.draw(window, verticalMode);
         window.display();
     }
 

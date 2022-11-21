@@ -56,9 +56,9 @@ int EditorView::getCharWidth() {
     return this->charWidth;
 }
 
-void EditorView::draw(sf::RenderWindow &window, bool isVertical) {
+void EditorView::draw(sf::RenderWindow &window, bool verticalMode) {
     // Draw in vertical mode
-    if (isVertical) {
+    if (verticalMode) {
         this->drawVertical(window);
         return;
     }
@@ -129,7 +129,7 @@ void EditorView::drawVertical(sf::RenderWindow &window) {
         window.draw(lineNumberText);
     }
 
-    this->drawCursor(window);
+    this->drawCursorVertical(window);
 }
 
 // TODO: esto lo deberia manejar el editorContetn de alguna forma? 4 harcodeado
@@ -224,17 +224,17 @@ void EditorView::drawLinesVertical(sf::RenderWindow &window) {
             texto.setCharacterSize(this->fontSize);
             texto.setPosition(width - (lineNumber + 1) * this->fontSize, offsety + this->marginXOffset);
 
-            window.draw(texto);
-
             if (currentSelected) {
                 sf::RectangleShape selectionRect(
-                    sf::Vector2f(this->charWidth, this->fontSize));
+                    sf::Vector2f(this->fontSize, this->fontSize));
                 selectionRect.setFillColor(this->colorSelection);
                 // TODO: Que el +2 no sea un numero magico
                 // TODO: Make the +2 not a magic number
                 selectionRect.setPosition(width - 2 - (lineNumber + 1) * this->fontSize, offsety + this->marginXOffset);
                 window.draw(selectionRect);
             }
+
+            window.draw(texto);
 
             offsety += this->fontSize;
         }
@@ -259,6 +259,27 @@ void EditorView::drawCursor(sf::RenderWindow &window) {
     cursorRect.setPosition(
         column * charWidth,
         (lineN * lineHeight) + offsetY);
+
+    window.draw(cursorRect);
+}
+
+void EditorView::drawCursorVertical(sf::RenderWindow &window) {
+    float width = window.getView().getSize().x;
+    int offsetY = this->marginXOffset;
+    int cursorDrawWidth = 2;
+
+    int lineHeight = getLineHeight();
+
+    std::pair<int, int> cursorPos = this->content.cursorPosition();
+    int lineN = cursorPos.first;
+    int column = cursorPos.second;
+
+    sf::RectangleShape cursorRect(sf::Vector2f(lineHeight, cursorDrawWidth));
+    cursorRect.setFillColor(sf::Color::White);
+
+    cursorRect.setPosition(
+        width - (lineN + 1) * lineHeight,
+        column * lineHeight + offsetY);
 
     window.draw(cursorRect);
 }
