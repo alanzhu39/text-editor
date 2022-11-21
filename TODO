@@ -9,9 +9,7 @@ Bugfixes:
 
 11/20/22:
 In progress:
-- cursor might be hard to do? feel like it might be easier if we rotate the viewing window, and then cursor functionality would be unchanged
-  - should have thought this through more at the beginning lol
-- add vertical mode to input controls to handle arrows, mouse cursor
+- vertical mode arrow movement
 - cleaning up, make sure horizontal mode still works
 - activate via command line arg
 
@@ -23,3 +21,6 @@ Vertical mode
 - draw margin
 - updated tab and esc keyboard input behavior
 - draw cursor
+- cursor highlighting
+- cursor might be hard to do? feel like it might be easier if we rotate the viewing window, and then cursor functionality would be unchanged
+  - should have thought this through more at the beginning lol

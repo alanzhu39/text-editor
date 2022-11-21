@@ -83,11 +83,11 @@ void EditorView::draw(sf::RenderWindow &window) {
         lineNumberText.setFont(this->font);
         lineNumberText.setString(std::to_string(lineNumber));
         lineNumberText.setCharacterSize(this->fontSize - 1);
-        lineNumberText.setPosition(-this->marginXOffset, blockHeight * (lineNumber - 1));
+        lineNumberText.setPosition(0, blockHeight * (lineNumber - 1));
 
         sf::RectangleShape marginRect(sf::Vector2f(this->marginXOffset - 5, blockHeight));
         marginRect.setFillColor(this->colorMargin);
-        marginRect.setPosition(-this->marginXOffset, blockHeight * (lineNumber - 1));
+        marginRect.setPosition(0, blockHeight * (lineNumber - 1));
 
         window.draw(marginRect);
         window.draw(lineNumberText);
@@ -160,7 +160,7 @@ void EditorView::drawLines(sf::RenderWindow &window) {
         // TODO: Esto es al pe?
         this->rightLimitPx = std::max((int)this->rightLimitPx, (int)(this->charWidth * line.getSize()));
 
-        float offsetx = 0;
+        float offsetx = this->marginXOffset;
         bool previousSelected = false;
 
         for (int charIndexInLine = 0; charIndexInLine <= (int)line.getSize(); charIndexInLine++) {
@@ -259,7 +259,7 @@ void EditorView::drawCursor(sf::RenderWindow &window) {
     cursorRect.setFillColor(sf::Color::White);
 
     cursorRect.setPosition(
-        column * charWidth,
+        this->marginXOffset + column * charWidth,
         (lineN * lineHeight) + offsetY);
 
     window.draw(cursorRect);
@@ -295,6 +295,7 @@ std::pair<int, int> EditorView::getDocumentCoords(
         return this->getDocumentCoordsVertical(mouseX, mouseY);
     }
 
+    mouseX -= this->marginXOffset;
     int lineN = mouseY / this->getLineHeight();
     int charN = 0;
 
@@ -326,7 +327,7 @@ std::pair<int, int> EditorView::getDocumentCoords(
 std::pair<int, int> EditorView::getDocumentCoordsVertical(
     float mouseX, float mouseY) {
 
-    mouseY = mouseY - this->marginXOffset;
+    mouseY -= this->marginXOffset;
 
     int lineN = (this->getWidth() - mouseX) / this->getLineHeight();
     int charN = 0;
