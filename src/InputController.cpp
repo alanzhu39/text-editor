@@ -150,8 +150,21 @@ void InputController::handleKeyPressedEvents(EditorView &textView, sf::Event &ev
             }
         }
 
+        sf::Keyboard::Key upKey, downKey, leftKey, rightKey;
+        if (textView.verticalMode) {
+            upKey = sf::Keyboard::Right;
+            downKey = sf::Keyboard::Left;
+            leftKey = sf::Keyboard::Up;
+            rightKey = sf::Keyboard::Down;
+        } else {
+            upKey = sf::Keyboard::Up;
+            downKey = sf::Keyboard::Down;
+            leftKey = sf::Keyboard::Left;
+            rightKey = sf::Keyboard::Right;
+        }
+
         // TODO: Swapping selections is buggy
-        if (event.key.code == sf::Keyboard::Up) {
+        if (event.key.code == upKey) {
             if (ctrlAndShift) {
                 editorContent.swapSelectedLines(true);
                 editorContent.moveCursorUp(true);
@@ -161,7 +174,7 @@ void InputController::handleKeyPressedEvents(EditorView &textView, sf::Event &ev
                 return;
             }
         }
-        if (event.key.code == sf::Keyboard::Down) {
+        if (event.key.code == downKey) {
             if (ctrlAndShift) {
                 editorContent.swapSelectedLines(false);
                 editorContent.moveCursorDown(true);
@@ -171,11 +184,11 @@ void InputController::handleKeyPressedEvents(EditorView &textView, sf::Event &ev
                 return;
             }
         }
-        if (event.key.code == sf::Keyboard::Left) {
+        if (event.key.code == leftKey) {
             editorContent.moveCursorLeft(this->shiftPressed && !isCtrlPressed);
             return;
         }
-        if (event.key.code == sf::Keyboard::Right) {
+        if (event.key.code == rightKey) {
             editorContent.moveCursorRight(this->shiftPressed && !isCtrlPressed);
             return;
         }
@@ -220,12 +233,14 @@ void InputController::handleTextEnteredEvent(EditorView &textView, sf::Event &ev
         } else if (!ctrlPressed) {
             if (event.text.unicode == '\t') {
                 // TODO: Cantidad de espacios de tab una variable
-                std::cerr << "TABS ACTIVADOS " << std::endl;
+                // std::cerr << "TABS ACTIVADOS " << std::endl;
                 // input = "    ";
+            } else if (event.text.unicode == 27) {
+                return;
+            } else {
+                editorContent.deleteSelections();
+                editorContent.addTextInCursorPos(input);
             }
-
-            editorContent.deleteSelections();
-            editorContent.addTextInCursorPos(input);
         }
     }
 }

@@ -1,0 +1,28 @@
+TODO:
+Features:
+- hold shift to edit selections
+- undo-redo
+
+Bugfixes:
+- shift with mouse click doesn't always work
+- some special characters don't work
+- rotate some characters for redability (underscore, colons, semicolons, parantheses)
+
+11/20/22:
+In progress:
+
+Finished:
+Vertical mode
+- mostly just have to update editor view?
+  - can we have it as a toggle. yes I think so, just refactor drawing functions and choose based on mode flag
+- draw lines
+- draw margin
+- updated tab and esc keyboard input behavior
+- draw cursor
+- cursor highlighting
+- cursor might be hard to do? feel like it might be easier if we rotate the viewing window, and then cursor functionality would be unchanged
+  - should have thought this through more at the beginning lol
+- vertical mode arrow movement
+- matrix mode theme
+- cleaning up, make sure horizontal mode still works
+- activate via command line arg

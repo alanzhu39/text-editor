@@ -9,7 +9,10 @@ class EditorView {
    public:
     EditorView(const sf::RenderWindow &window,
         const sf::String &workingDirectory,
-        EditorContent &editorContent);
+        EditorContent &editorContent,
+        bool verticalMode=false);
+
+    bool verticalMode;
 
     void draw(sf::RenderWindow &window);
     void setFontSize(int fontSize);
@@ -45,8 +48,11 @@ class EditorView {
    private:
     EditorContent &content;
 
+    void drawVertical(sf::RenderWindow &window);
     void drawLines(sf::RenderWindow &window);
+    void drawLinesVertical(sf::RenderWindow &window);
     void drawCursor(sf::RenderWindow &window);
+    void drawCursorVertical(sf::RenderWindow &window);
 
     sf::Font font;
     int fontSize;
@@ -63,9 +69,13 @@ class EditorView {
     sf::Color colorSelection;
 
     sf::View camera;
+    float getWidth();
+    float getHeight();
     float deltaScroll;
     float deltaRotation;
     float deltaZoomIn, deltaZoomOut;
+
+    std::pair<int,int> getDocumentCoordsVertical(float mouseX, float mouseY);
 };
 
 #endif

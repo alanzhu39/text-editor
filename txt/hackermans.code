@@ -1,0 +1,53 @@
+AbstractCommand::~AbstractCommand()
+{
+  disableReadCheckSocket();
+  disableWriteCheckSocket();
+#ifdef ENABLE_ASYNC_DNS
+  asyncNameResolverMan_->disableNameResolverCheck(e_, this);
+#endif // ENABLE_ASYNC_DNS
+  requestGroup_->decreaseNumCommand();
+  requestGroup_->decreaseStreamCommand();
+  if (incNumConnection_) {
+    requestGroup_->decreaseStreamConnection();
+  }
+}
+
+void AbstractCommand::useFasterRequest(
+    const std::shared_ptr<Request>& fasterRequest)
+{
+  A2_LOG_INFO(fmt("CUID#%" PRId64 " - Use faster Request hostname=%s, port=%u",
+                  getCuid(), fasterRequest->getHost().c_str(),
+                  fasterRequest->getPort()));
+  // Cancel current Request object and use faster one.
+  fileEntry_->removeRequest(req_);
+  e_->setNoWait(true);
+  e_->addCommand(
+      InitiateConnectionCommandFactory::createInitiateConnectionCommand(
+          getCuid(), fasterRequest, fileEntry_, requestGroup_, e_));
+}
+
+Performance::MonitorCall::MonitorCall(Callable p_callable, Vector<Variant> p_arguments) {
+	_callable = p_callable;
+	_arguments = p_arguments;
+}
+
+Performance::MonitorCall::MonitorCall() {
+}
+
+Variant Performance::MonitorCall::call(bool &r_error, String &r_error_message) {
+	Vector<const Variant *> arguments_mem;
+	arguments_mem.resize(_arguments.size());
+	for (int i = 0; i < _arguments.size(); i++) {
+		arguments_mem.write[i] = &_arguments[i];
+	}
+	const Variant **args = (const Variant **)arguments_mem.ptr();
+	int argc = _arguments.size();
+	Variant return_value;
+	Callable::CallError error;
+	_callable.callp(args, argc, return_value, error);
+	r_error = (error.error != Callable::CallError::CALL_OK);
+	if (r_error) {
+		r_error_message = Variant::get_callable_error_text(_callable, args, argc, error);
+	}
+	return return_value;
+}
