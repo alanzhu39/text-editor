@@ -4,8 +4,9 @@
 EditorView::EditorView(
     const sf::RenderWindow &window,
     const sf::String &workingDirectory,
-    EditorContent &editorContent)
-    : content(editorContent),
+    EditorContent &editorContent,
+    bool verticalMode)
+    : content(editorContent), verticalMode(verticalMode),
       camera(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
       deltaScroll(20), deltaRotation(2), deltaZoomIn(0.8f), deltaZoomOut(1.2f) {
 
@@ -56,9 +57,9 @@ int EditorView::getCharWidth() {
     return this->charWidth;
 }
 
-void EditorView::draw(sf::RenderWindow &window, bool verticalMode) {
+void EditorView::draw(sf::RenderWindow &window) {
     // Draw in vertical mode
-    if (verticalMode) {
+    if (this->verticalMode) {
         this->drawVertical(window);
         return;
     }

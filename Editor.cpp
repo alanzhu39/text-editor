@@ -6,15 +6,20 @@
 
 int main(int argc, char* argv[]) {
 
-    bool verticalMode = true;
+    bool verticalMode = false;
     std::string workingDirectory = ImplementationUtils::getWorkingDirectory(argv[0]);
 
     std::string saveFileName;
     std::string loadFileName;
 
-    if (argc == 2) {
+    if (argc >= 2) {
         saveFileName = workingDirectory + argv[1];
         loadFileName = workingDirectory + argv[1];
+        if (argc == 3) {
+            if (std::string("--matrix-mode").compare(argv[2]) == 0) {
+                verticalMode = true;
+            }
+        }
     } else {
         saveFileName = workingDirectory + "txt/textoDePruebaGuardado.txt";
         loadFileName = workingDirectory + "txt/textoDePrueba.txt";
@@ -36,7 +41,7 @@ int main(int argc, char* argv[]) {
 
     EditorContent editorContent(document);
 
-    EditorView editorView(window, workingDirectory, editorContent);
+    EditorView editorView(window, workingDirectory, editorContent, verticalMode);
     InputController inputController(editorContent);
 
 
@@ -63,7 +68,7 @@ int main(int argc, char* argv[]) {
 
         window.clear(backgroundColor);
         window.setView(editorView.getCameraView());
-        editorView.draw(window, verticalMode);
+        editorView.draw(window);
         window.display();
     }
 
