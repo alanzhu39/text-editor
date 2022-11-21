@@ -12,6 +12,8 @@ class EditorView {
         EditorContent &editorContent,
         bool verticalMode=false);
 
+    bool verticalMode;
+
     void draw(sf::RenderWindow &window);
     void setFontSize(int fontSize);
 
@@ -51,8 +53,6 @@ class EditorView {
     void drawLinesVertical(sf::RenderWindow &window);
     void drawCursor(sf::RenderWindow &window);
     void drawCursorVertical(sf::RenderWindow &window);
-
-    bool verticalMode;
 
     sf::Font font;
     int fontSize;

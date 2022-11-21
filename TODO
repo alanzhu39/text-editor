@@ -10,6 +10,7 @@ Bugfixes:
 11/20/22:
 In progress:
 - vertical mode arrow movement
+- matrix mode theme
 - cleaning up, make sure horizontal mode still works
 - activate via command line arg
 

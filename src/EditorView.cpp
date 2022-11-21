@@ -6,7 +6,7 @@ EditorView::EditorView(
     const sf::String &workingDirectory,
     EditorContent &editorContent,
     bool verticalMode)
-    : content(editorContent), verticalMode(verticalMode),
+    : verticalMode(verticalMode), content(editorContent),
       camera(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
       deltaScroll(20), deltaRotation(2), deltaZoomIn(0.8f), deltaZoomOut(1.2f) {
 
