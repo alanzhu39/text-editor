@@ -1,4 +1,16 @@
-
+asdf
 Hello, World!
-
+asdfa asdf
 save please
+
+sf::RenderWindow window(sf::VideoMode(720, 405), "text-editor");
+window.setVerticalSyncEnabled(true);
+sf::Color backgroundColor = sf::Color(21, 29, 45);
+
+TextDocument document;
+document.init(loadFileName);
+
+EditorContent editorContent(document);
+
+EditorView editorView(window, workingDirectory, editorContent);
+InputController inputController(editorContent);

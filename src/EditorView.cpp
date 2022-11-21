@@ -6,7 +6,7 @@ EditorView::EditorView(
     const sf::String &workingDirectory,
     EditorContent &editorContent)
     : content(editorContent),
-      camera(sf::FloatRect(-50, 0, window.getSize().x, window.getSize().y)),
+      camera(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
       deltaScroll(20), deltaRotation(2), deltaZoomIn(0.8f), deltaZoomOut(1.2f) {
 
     // this->font.loadFromFile("fonts/FreeMono.ttf");
@@ -104,8 +104,10 @@ void EditorView::drawVertical(sf::RenderWindow &window) {
 
     // Dibujo los numeros de la izquierda
     // Draw the numbers on the left
+    float width = window.getView().getSize().x;
 
     // TODO: Hacer una clase separada para el margin
+    // TODO: Make a separate class for the margin
     for (int lineNumber = 1; lineNumber <= this->content.linesCount(); lineNumber++) {
         int lineHeight = 1;
 
@@ -116,11 +118,12 @@ void EditorView::drawVertical(sf::RenderWindow &window) {
         lineNumberText.setFont(this->font);
         lineNumberText.setString(std::to_string(lineNumber));
         lineNumberText.setCharacterSize(this->fontSize - 1);
-        lineNumberText.setPosition(-this->marginXOffset, blockHeight * (lineNumber - 1));
+        lineNumberText.setPosition(width - blockHeight * (lineNumber - 1), 0);
+        lineNumberText.setRotation(90);
 
-        sf::RectangleShape marginRect(sf::Vector2f(this->marginXOffset - 5, blockHeight));
+        sf::RectangleShape marginRect(sf::Vector2f(blockHeight, this->marginXOffset - 5));
         marginRect.setFillColor(this->colorMargin);
-        marginRect.setPosition(-this->marginXOffset, blockHeight * (lineNumber - 1));
+        marginRect.setPosition(width - blockHeight * lineNumber, 0);
 
         window.draw(marginRect);
         window.draw(lineNumberText);
@@ -196,7 +199,8 @@ void EditorView::drawLines(sf::RenderWindow &window) {
 }
 
 void EditorView::drawLinesVertical(sf::RenderWindow &window) {
-    this->rightLimitPx = this->content.linesCount() * this->fontSize;
+    this->rightLimitPx = (this->content.linesCount() - 1) * this->fontSize;
+    float width = window.getView().getSize().x;
 
     for (int lineNumber = 0; lineNumber < this->content.linesCount(); lineNumber++) {
         sf::String line = this->content.getLine(lineNumber);
@@ -218,7 +222,7 @@ void EditorView::drawLinesVertical(sf::RenderWindow &window) {
             texto.setFont(font);
             texto.setString(currentLineText);
             texto.setCharacterSize(this->fontSize);
-            texto.setPosition(lineNumber * this->fontSize, offsety);
+            texto.setPosition(width - (lineNumber + 1) * this->fontSize, offsety + this->marginXOffset);
 
             window.draw(texto);
 
@@ -228,7 +232,7 @@ void EditorView::drawLinesVertical(sf::RenderWindow &window) {
                 selectionRect.setFillColor(this->colorSelection);
                 // TODO: Que el +2 no sea un numero magico
                 // TODO: Make the +2 not a magic number
-                selectionRect.setPosition(2 + lineNumber * this->fontSize, offsety);
+                selectionRect.setPosition(width - 2 - (lineNumber + 1) * this->fontSize, offsety + this->marginXOffset);
                 window.draw(selectionRect);
             }
 
@@ -315,7 +319,7 @@ void EditorView::scrollLeft(sf::RenderWindow &window) {
     float width = window.getView().getSize().x;
     auto camPos = this->camera.getCenter();
     // Scrolleo arriba si no me paso del limite izquierdo
-    if (camPos.x - width / 2 > -this->marginXOffset) {
+    if (camPos.x - width / 2 > 0) {
         this->camera.move(-this->deltaScroll, 0);
     }
 }
@@ -347,7 +351,7 @@ void EditorView::zoomOut() {
 }
 
 void EditorView::setCameraBounds(int width, int height) {
-    this->camera = sf::View(sf::FloatRect(-50, 0, width, height));
+    this->camera = sf::View(sf::FloatRect(0, 0, width, height));
 }
 
 sf::View EditorView::getCameraView() {

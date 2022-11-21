@@ -220,12 +220,14 @@ void InputController::handleTextEnteredEvent(EditorView &textView, sf::Event &ev
         } else if (!ctrlPressed) {
             if (event.text.unicode == '\t') {
                 // TODO: Cantidad de espacios de tab una variable
-                std::cerr << "TABS ACTIVADOS " << std::endl;
+                // std::cerr << "TABS ACTIVADOS " << std::endl;
                 // input = "    ";
+            } else if (event.text.unicode == 27) {
+                return;
+            } else {
+                editorContent.deleteSelections();
+                editorContent.addTextInCursorPos(input);
             }
-
-            editorContent.deleteSelections();
-            editorContent.addTextInCursorPos(input);
         }
     }
 }
