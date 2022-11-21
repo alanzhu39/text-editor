@@ -1,4 +1,11 @@
 TODO:
+Features:
+- hold shift to edit selections
+- undo-redo
+
+Bugfixes:
+- shift with mouse click doesn't always work
+- some special characters don't work
 
 11/20/22:
 In progress:
